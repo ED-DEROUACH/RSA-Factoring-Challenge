@@ -1,0 +1,28 @@
+#!/usr/bin/python3
+import sys
+
+
+def factorize(value):
+    """Print a simple decomposition of an integer > 1"""
+    i = 2
+
+    if value < 2:
+        return
+    while value % i:
+        i += 1
+    print("{:.0f}={:.0f}*{:.0f}".format(value, value / i, i))
+
+
+if len(sys.argv) != 2:
+    exit()
+
+try:
+    with open(sys.argv[1]) as file:
+        line = file.readline()
+
+        while line != "":
+            value = int(line.strip())  # Using strip() to remove newline characters
+            factorize(value)
+            line = file.readline()
+except:
+    pass
