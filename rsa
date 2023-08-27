@@ -1,33 +1,35 @@
-#!/usr/bin/python3
+#include <stdio.h>
+#include <stdlib.h>
 
-# library to get arguments
-import sys
+void factorize(int value) {
+    int i = 2;
 
+    if (value < 2) {
+        return;
+    }
+    while (value % i) {
+        i++;
+    }
+    printf("%d=%d*%d\n", value, value / i, i);
+}
 
-# fn unpack number factorial
-def fc():
-    """
-    function fc to search file to convert number and format n=p*q
-    """
-    try:
-        revfile = sys.argv[1]
-        with open(revfile) as f:
-            for revnumber in f:
-                revnumber = int(revnumber)
-                if revnumber % 2 == 0:
-                        print("{}={}*{}".format(revnumber, revnumber // 2, 2))
-                        continue
-                i = 3
-                while i < revnumber // 2:
-                    if revnumber % i == 0:
-                        print("{}={}*{}".format(revnumber, revnumber // i, i))
-                        break
-                    i = i + 2
-                if i == (revnumber // 2) + 1:
-                    print("{}={}*{}".format(revnumber, revnumber, 1))
-    except (IndexError):
-        pass
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        return 1;
+    }
 
+    FILE *file = fopen(argv[1], "r");
+    if (file == NULL) {
+        return 1;
+    }
 
-# autostart
-fc()
+    char line[256];
+    while (fgets(line, sizeof(line), file) != NULL) {
+        int value = atoi(line);
+        factorize(value);
+    }
+
+    fclose(file);
+
+    return 0;
+}
