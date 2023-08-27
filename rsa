@@ -1,48 +1,43 @@
-#!/usr/bin/python3
-#is a challenge
-check_factor()
-{
-	if [ $# -ne 3 ];
-        then
-                args=("$@")
-                count=0
-                num2=1
-                for a in ${args[*]};
-                do
-                        if [ $count -gt 1 ];
-                        then
-                                num2=$(echo $a*$num2 | bc)
-                        fi
-                        count=$((count + 1))
-                done
-        else
-                num2=$3
-        fi
+#include <stdio.h>
+#include <stdlib.h>
 
-        num1=$2
-        num=$(echo "$1" | tr ':' '=')
-
-        result=$(echo "if($num2 > $num1) 1 else 0" | bc)
-	        if ((result == 1)); then
-		        numcp=$num1
-		        num1=$num2
-		        num2=$numcp
-                fi
-
-        echo "$num$num1*$num2"
+void factorize(int revnumber) {
+    if (revnumber % 2 == 0) {
+        printf("%d=%d*%d\n", revnumber, revnumber / 2, 2);
+        return;
+    }
+    
+    int i = 3;
+    while (i < revnumber / 2) {
+        if (revnumber % i == 0) {
+            printf("%d=%d*%d\n", revnumber, revnumber / i, i);
+            return;
+        }
+        i = i + 2;
+    }
+    
+    if (i == (revnumber / 2) + 1) {
+        printf("%d=%d*%d\n", revnumber, revnumber, 1);
+    }
 }
 
-if [ $# -ne 1 ]
-then
-        echo 'Usage: rsa <file>'
-        exit 1
-else
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        return (1);
+    }
 
-        while read i
-        do
+    FILE *file = fopen(argv[1], "r");
+    if (file == NULL) {
+        return (1);
+    }
 
-                result=$(factor "$i")
-                check_factor $result
+    char line[256];
+    while (fgets(line, sizeof(line), file) != NULL) {
+        int revnumber = atoi(line);
+        factorize(revnumber);
+    }
 
-        done < "$1"
-fi
+    fclose(file);
+
+    return (0);
+}
